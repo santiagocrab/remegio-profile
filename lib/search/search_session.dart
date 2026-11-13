@@ -22,6 +22,9 @@ class SearchSession<T> {
   /// True during the pause before a request is started.
   bool waiting = false;
 
+  /// Latest trimmed field text (even when below [minimumLength]).
+  String draft = '';
+
   /// The request for the current query, or null when there is nothing to show.
   Future<List<T>>? results;
 
@@ -31,6 +34,7 @@ class SearchSession<T> {
   void onChanged(String text, void Function() notify) {
     _timer?.cancel();
     final String query = text.trim();
+    draft = query;
     results = null;
     activeQuery = null;
     if (query.length < minimumLength) {

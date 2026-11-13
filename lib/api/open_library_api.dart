@@ -14,8 +14,10 @@ class OpenLibraryApi {
   final http.Client _client;
   final bool _ownsClient;
 
+  /// Only CORS-safe headers. Custom `User-Agent` is blocked by browsers and
+  /// makes Open Library reject the preflight ("Disallowed CORS headers"),
+  /// which the app surfaces as "No connection" on Safari.
   static const Map<String, String> _headers = <String, String>{
-    'User-Agent': 'remegio_unit7_exercise (CC 207B student project)',
     'Accept': 'application/json',
   };
 

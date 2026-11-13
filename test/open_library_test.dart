@@ -114,7 +114,30 @@ void main() {
       'key,title,author_name,first_publish_year,cover_i',
     );
     expect(sent.url.queryParameters['limit'], '20');
+    expect(sent.headers['User-Agent'], isNull);
+    expect(sent.headers['Accept'], 'application/json');
     expect(books.single.workId, 'OL27482W');
+    api.close();
+  });
+
+  test('blocked stop-word search explains the 422', () async {
+    final http.Client client = MockClient((http.Request request) async {
+      return http.Response(
+        '{"detail":[{"msg":"Value error, (\'Invalid query; the following queries are not allowed: the\',)"}]}',
+        422,
+      );
+    });
+    final OpenLibraryApi api = OpenLibraryApi(client: client);
+    await expectLater(
+      api.search('the'),
+      throwsA(
+        isA<Object>().having(
+          (Object e) => e.toString(),
+          'message',
+          contains('does not allow that search word'),
+        ),
+      ),
+    );
     api.close();
   });
 }

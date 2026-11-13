@@ -79,11 +79,13 @@ class _SearchPageState<T> extends State<SearchPage<T>> {
     if (future == null) {
       return _message(
         icon: Icons.search,
-        text: _session.waiting ? 'Searching…' : widget.instructions,
+        text: _idleMessage(),
         showSpinner: _session.waiting,
       );
     }
     return FutureBuilder<List<T>>(
+      // Keyed so a new query always rebuilds from ConnectionState.waiting.
+      key: ValueKey<Object?>(_session.activeQuery),
       future: future,
       builder: (BuildContext context, AsyncSnapshot<List<T>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
@@ -104,6 +106,7 @@ class _SearchPageState<T> extends State<SearchPage<T>> {
             ),
           );
         }
+        // Empty list only after a finished successful response.
         final List<T> items = snapshot.data ?? <T>[];
         if (items.isEmpty) {
           return _message(icon: Icons.search_off, text: widget.emptyMessage);
@@ -125,6 +128,17 @@ class _SearchPageState<T> extends State<SearchPage<T>> {
         );
       },
     );
+  }
+
+  String _idleMessage() {
+    if (_session.waiting) return 'Searching…';
+    final String draft = _session.draft;
+    final int need = _session.minimumLength;
+    if (draft.isNotEmpty && draft.length < need) {
+      return 'Type at least $need letters to search '
+          '(${draft.length} so far).';
+    }
+    return widget.instructions;
   }
 
   Widget _message({

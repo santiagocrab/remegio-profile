@@ -27,8 +27,10 @@ void main() {
     await tester.enterText(find.byType(TextField), 'ho');
     await tester.pump(const Duration(milliseconds: 500));
     expect(api.queries, isEmpty);
-    expect(find.text('Type at least 3 letters to search Open Library.'),
-        findsOneWidget);
+    expect(
+      find.text('Type at least 3 letters to search (2 so far).'),
+      findsOneWidget,
+    );
 
     await tester.enterText(find.byType(TextField), 'hob');
     await tester.pump(const Duration(milliseconds: 400));
@@ -45,7 +47,7 @@ void main() {
     await tester.pump();
     expect(find.text('The Hobbit'), findsNothing);
     expect(
-      find.text('Type at least 3 letters to search Open Library.'),
+      find.textContaining('Type at least 3 letters to search Open Library.'),
       findsOneWidget,
     );
 

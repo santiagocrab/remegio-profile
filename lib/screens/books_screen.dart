@@ -42,7 +42,9 @@ class _BooksScreenState extends State<BooksScreen>
     super.build(context);
     return SearchPage<Book>(
       hint: 'Search books',
-      instructions: 'Type at least 3 letters to search Open Library.',
+      instructions:
+          'Type at least 3 letters to search Open Library. Searching starts after you pause typing — no Enter needed.',
+      emptyMessage: 'No books found',
       search: _api.search,
       itemBuilder: (BuildContext context, Book book) =>
           BookResultTile(book: book),

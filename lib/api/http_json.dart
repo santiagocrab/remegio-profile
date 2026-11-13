@@ -55,6 +55,8 @@ Object? decodeBody(http.Response response, String service) {
         '$service could not find that page (404). '
         'Check the URL and the id.',
       );
+    case 422:
+      throw ApiException(_unprocessableMessage(service, response.body));
     case >= 500:
       throw ApiException(
         '$service is having problems ($code). Try again later.',
@@ -62,6 +64,17 @@ Object? decodeBody(http.Response response, String service) {
     default:
       throw ApiException('$service answered $code.');
   }
+}
+
+/// Open Library returns 422 for blocked stop words such as "the" or "a".
+String _unprocessableMessage(String service, String body) {
+  final String lower = body.toLowerCase();
+  if (service == 'Open Library' &&
+      (lower.contains('not allowed') || lower.contains('invalid query'))) {
+    return 'Open Library does not allow that search word. '
+        'Try a more specific title (for example "Hobbit"), not words like "the" or "a".';
+  }
+  return '$service could not use that search (422). Try a different query.';
 }
 
 /// A JSON object, or an [ApiException] when the body is something else.
