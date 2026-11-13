@@ -28,7 +28,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     expect(api.queries, isEmpty);
     expect(
-      find.text('Type at least 3 letters to search (2 so far).'),
+      find.text('Type at least 3 letters to search Open Library.'),
       findsOneWidget,
     );
 

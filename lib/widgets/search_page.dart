@@ -132,12 +132,6 @@ class _SearchPageState<T> extends State<SearchPage<T>> {
 
   String _idleMessage() {
     if (_session.waiting) return 'Searching…';
-    final String draft = _session.draft;
-    final int need = _session.minimumLength;
-    if (draft.isNotEmpty && draft.length < need) {
-      return 'Type at least $need letters to search '
-          '(${draft.length} so far).';
-    }
     return widget.instructions;
   }
 
