@@ -1,0 +1,7 @@
+{
+  "CMS": "contentful",
+  "CMS_URL": "https://cdn.contentful.com",
+  "CMS_SPACE": "your-space-id",
+  "CMS_TOKEN": "your-content-delivery-api-token",
+  "OMDB_KEY": "your-omdb-api-key"
+}
